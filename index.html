@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+
+
+
+<head>
+
+  
+
+  
+
+
+
+
+
+
+
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-id="th-modified">الخارطة الزمنية للمقرر الدراسي — وحدة صحتي وبيئتي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+              .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            z-index: 1000; /* Keeps it on top of other content */
+        }
+
+        /* Styling for the rest of the page content */
+        .content {
+            padding: 20px;
+            height: 2000px; /* Makes the page scrollable */
+            background-color: #f4f4f4;
+        }
+
+
+
+
+
+
+
+
+    :root{
+    --navy:#101A33;
+    --navy-deep:#0A1226;
+    --paper:#FBF7EE;
+    --paper-dim:#F1EAD9;
+    --ink:#1B2438;
+    --slate:#5B6B8C;
+    --gold:#E3A94D;
+    --coral:#D9694F;   /* اختبارات وقواعد */
+    --teal:#4FA69A;    /* قراءة ونصوص */
+    --violet:#8B6FC9;  /* إملاء وخط */
+    --crimson:#B23A48; /* اختبار نهائي */
+    --grey:#8A93A6;    /* إجازات وتجهيز */
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy);
+    color:var(--paper);
+    font-family:'IBM Plex Sans Arabic', 'Tajawal', sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{font-family:'Cairo', sans-serif;}
+  .mono{font-family:'Tajawal', monospace; font-weight:700;}
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:64px 6vw 24px;
+    background:radial-gradient(ellipse at top right, #17244A 0%, var(--navy) 55%);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .eyebrow{
+    font-family:'Tajawal', sans-serif;
+    letter-spacing:.05em;
+    font-size:14px;
+    font-weight:700;
+    color:var(--gold);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:clamp(28px,4.5vw,48px);
+    font-weight:800;
+    margin:0 0 14px;
+    max-width:20ch;
+    color:#fff;
+    line-height:1.3;
+  }
+  .hero p{
+    max-width:65ch;
+    color:#C7CEDE;
+    font-size:16px;
+    margin:0 0 8px;
+  }
+  .hero .sub-note{
+    font-size:13.5px;
+    color:var(--grey);
+  }
+
+  /* ---------- CURVE NAV ---------- */
+  .curve-section{
+    padding:12px 4vw 40px;
+    background:var(--navy);
+    overflow-x:auto;
+  }
+  .curve-caption{
+    font-size:13.5px;
+    color:var(--grey);
+    padding:0 2vw 8px;
+    max-width:70ch;
+  }
+  .curve-svg-wrap{
+    min-width:1300px;
+    position:relative;
+  }
+  .curve-svg-wrap svg{width:100%;height:auto;display:block;}
+  .node{cursor:pointer;}
+  .node circle{transition:r .15s ease, filter .15s ease;}
+  .node:hover circle{filter:brightness(1.3);}
+  .node text{
+    font-family:'Tajawal', sans-serif;
+    font-size:11.5px;
+    fill:#8892A8;
+    font-weight:600;
+  }
+  .node.active circle{stroke:#fff;stroke-width:2px;}
+  .today-flag{
+    font-family:'Tajawal', sans-serif;
+    font-size:11.5px;
+    fill:var(--gold);
+    font-weight:700;
+  }
+
+  /* ---------- ASSESSMENT SUMMARY ---------- */
+  .assess-section{
+    padding:48px 6vw 24px;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .assess-section h2{font-size:26px;margin:0 0 6px;}
+  .assess-section > p{color:var(--slate);max-width:65ch;margin:0 0 28px;font-size:15px;}
+  .assess-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+  }
+  .assess-card{
+    background:var(--paper-dim);
+    border-radius:10px;
+    padding:20px;
+    border-right:5px solid var(--gold);
+  }
+  .assess-card.national{border-right-color:var(--teal);}
+  .assess-card.break{border-right-color:var(--grey);}
+  .assess-card.quiz{border-right-color:var(--coral);}
+  .assess-card.final{border-right-color:var(--crimson);}
+  .assess-card .label{
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.05em;
+    color:var(--slate);
+  }
+  .assess-card h3{margin:6px 0 8px;font-size:18px;}
+  .assess-card .weeks{
+    font-size:13px;
+    font-weight:700;
+  }
+  .assess-card .weeks.national-c{color:var(--teal);}
+  .assess-card .weeks.break-c{color:var(--slate);}
+  .assess-card .weeks.quiz-c{color:var(--coral);}
+  .assess-card .weeks.final-c{color:var(--crimson);}
+  .assess-card p.desc{margin:8px 0 0;font-size:13.5px;color:var(--slate);}
+
+  /* ---------- FILTERS ---------- */
+  .filter-bar{
+    padding:20px 6vw 0;
+    background:var(--paper);
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .filter-btn{
+    font-family:'Tajawal', sans-serif;
+    font-size:13px;
+    font-weight:600;
+    border:1px solid #D8CFB9;
+    background:#fff;
+    color:var(--ink);
+    padding:8px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .filter-btn:hover{border-color:var(--ink);}
+  .filter-btn.active{
+    background:var(--ink);
+    color:var(--paper);
+    border-color:var(--ink);
+  }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline-section{
+    background:var(--paper);
+    padding:24px 6vw 64px;
+  }
+  .week-card{
+    background:#fff;
+    border:1px solid #EAE2CC;
+    border-radius:10px;
+    margin-bottom:12px;
+    overflow:hidden;
+    transition:box-shadow .15s ease;
+  }
+  .week-card.hidden{display:none;}
+  .week-card summary{
+    list-style:none;
+    cursor:pointer;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .week-card summary::-webkit-details-marker{display:none;}
+  .week-num{
+    font-size:12.5px;
+    color:#fff;
+    background:var(--ink);
+    border-radius:6px;
+    padding:4px 10px;
+    min-width:60px;
+    text-align:center;
+    flex-shrink:0;
+  }
+  .week-meta{flex:1;min-width:0;}
+  .week-date{
+    font-size:12px;
+    color:var(--slate);
+    font-weight:600;
+  }
+  .week-title{
+    font-size:17px;
+    font-weight:700;
+    color:var(--ink);
+    font-family:'Cairo', sans-serif;
+  }
+  .week-unit{font-size:13px;color:var(--slate);}
+  .badge{
+    font-size:11.5px;
+    font-weight:700;
+    padding:4px 12px;
+    border-radius:999px;
+    color:#fff;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .badge.national{background:var(--teal);}
+  .badge.break{background:var(--grey);}
+  .badge.quiz{background:var(--coral);}
+  .badge.revision{background:var(--gold);color:var(--ink);}
+  .chev{color:var(--slate);transition:transform .15s ease;flex-shrink:0;}
+  details[open] .chev{transform:rotate(90deg);}
+  .week-body{
+    padding:4px 20px 24px 20px;
+    border-top:1px solid #F1EAD9;
+  }
+  .week-body ul{
+    margin:16px 0 0;
+    padding-right:20px;
+    padding-left:0;
+    color:var(--ink);
+    font-size:15px;
+    line-height:1.7;
+  }
+  .week-body ul li{margin-bottom:4px;}
+  .week-body p.why{
+    font-size:14px;
+    color:var(--slate);
+    margin:14px 0 0;
+    padding-right:12px;
+    border-right:3px solid var(--gold);
+  }
+  .week-body p.why b{color:var(--ink);font-weight:700;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--navy-deep);
+    color:var(--grey);
+    padding:32px 6vw;
+    font-size:13.5px;
+  }
+  footer strong{color:var(--paper);}
+
+  @media (max-width:640px){
+    .week-num{display:none;}
+  }
+</style>
+<meta property="og:title" content="الخارطة الزمنية للمقرر الدراسي — وحدة صحتي وبيئتي" data-id="th-modified" ><meta property="og:image" content="https://tiiny.host/assets/logo-purple-bg.png" data-id="th-modified" ><meta property="og:image:width" content="1501" data-id="th-modified" ><meta property="og:image:height" content="1501" data-id="th-modified" ><meta property="og:image:type" content="image/png" data-id="th-modified" ><meta property="og:url" content="https://ais-subjects.tiiny.site/" data-id="th-modified" ><meta property="og:type" content="website" data-id="th-modified" ><script defer data-domain="ais-subjects.tiiny.site" src="https://analytics.tiiny.net/js/plausible.js"></script><script type="text/javascript" src="https://tiiny.host/ad-script.js"></script></head>
+<body>
+
+
+
+
+
+
+
+<div class="sticky-header">
+        
+     <center>
+        <H2>
+             <a href="#" class="logo">Grade4..    
+    
+            
+            </a><a href="G4-English.html"  >English - </a>
+            <a href="G4-Math.html">Math -</a>
+            <a href="G4-Science.html">Science -</a>        
+            <a href="G4-Arabic.html"  style="color: yellow;">Arabic</a>           
+        
+      
+      </H2>
+    
+      </center>    
+
+
+ </div>
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<header class="hero">
+  <div class="eyebrow">المقرر الدراسي · لغتي الجميلة · الفصل الدراسي الأول · 2026</div>
+  <h1>خطة التعلم الأسبوعية — وحدة صحتي وبيئتي</h1>
+  <p>رحلة متكاملة للطلاب خلال الفصل الدراسي؛ تغطي الفهم القرائي، الظواهر الإملائية، الوظائف النحوية، والرسم الكتابي، بالإضافة إلى المحطات التقييمية والإجازات الرسمية.</p>
+  <p class="sub-note">اضغط على أي نقطة في المنحنى — أو أي أسبوع أدناه — لعرض تفاصيل المحتوى الدراسي.</p>
+</header>
+
+<section class="curve-section">
+  <div class="curve-caption">المسار الزمني للمقرر عبر الأسابيع — اضغط على النقطة للانتقال للأسبوع:</div>
+  <div class="curve-svg-wrap">
+    <svg id="curveSvg" viewBox="0 0 1400 190" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+</section>
+
+<section class="assess-section">
+  <h2>أبرز المحطات والإجازات خلال الفصل</h2>
+  <p>يتضمن الفصل الدراسي محطات رئيسية وإجازات رسمية موزعة كالآتي:</p>
+  <div class="assess-grid">
+    <div class="assess-card national">
+      <div class="label">إجازة رسمية</div>
+      <h3>اليوم الوطني السعودي</h3>
+      <div class="weeks national-c">الأسبوع 5 · 20 سبتمبر 2026</div>
+      <p class="desc">ترافقها دراسة الهمزة المتطرفة الاحتفاء بهذه المناسبة العزيزة.</p>
+    </div>
+    <div class="assess-card break">
+      <div class="label">إجازة رسمية</div>
+      <h3>إجازة الخريف</h3>
+      <div class="weeks break-c">الأسبوع 14 · 22 نوفمبر 2026</div>
+      <p class="desc">استراحة منتصف الفصل لاستعادة النشاط والجاهزية.</p>
+    </div>
+    <div class="assess-card quiz">
+      <div class="label">تقييم مستمر</div>
+      <h3>نموذج اختبار (1) المطر</h3>
+      <div class="weeks quiz-c">الأسبوع 17 · 13 ديسمبر 2026</div>
+      <p class="desc">تطبيق شامل لقياس مستوى الفهم القرائي والقواعد النحوية والإملائية.</p>
+    </div>
+    <div class="assess-card final">
+      <div class="label">المحطة الختامية</div>
+      <h3>مراجعة الاختبار النهائي</h3>
+      <div class="weeks final-c">الأسبوع 18 · 20 ديسمبر 2026</div>
+      <p class="desc">مراجعة شاملة لكافة مكتسبات وحدة (صحتي وبيئتي) استعداداً للاختبارات.</p>
+    </div>
+  </div>
+</section>
+
+<div class="filter-bar" id="filterBar"></div>
+
+<section class="timeline-section">
+  <div id="timeline"></div>
+</section>
+
+<footer>
+  <p><strong>دليل الألوان:</strong> الأخضر = اليوم الوطني، الرمادي = الإجازات والتهيئة، البرتقالي/الأحمر = الاختبارات والمراجعة النهائية، البنفسجي/الأزرق = الدروس التعليمية.</p>
+  <p style="margin-top:10px;">لأي استفسار حول مفردات المقرر أو توزيع الدروس، يرجى التواصل مع معلم المادة.</p>
+</footer>
+
+<script>
+const weeks = [
+ {n:1, date:"23 أغسطس 2026", unit:"صحتي وبيئتي", category:"gram", title:"تعارف ووضع القوانين الصفية", topics:["تعارف ووضع القوانين الصفية","مراجعة المكتسبات السابقة"], why:"تأسيس بيئة التعلم وتذكر المهارات والمفاهيم السابقة.", assessment:null},
+ {n:2, date:"30 أغسطس 2026", unit:"صحتي وبيئتي", category:"read", title:"الفهم القرائي: التصحر وأثره على البيئة", topics:["قراءة النص وتحليله واستيعاب أفكاره","مناقشة أثر التصحر وتنمية المعجم اللغوي"], why:"تنمية مهارات الفهم والاستيعاب القراءة التفاعلية.", assessment:null},
+ {n:3, date:"6 سبتمبر 2026", unit:"صحتي وبيئتي", category:"spell", title:"الظاهرة الإملائية: همزتا الوصل والقطع", topics:["التمييز بين همزة الوصل وهمزة القطع","تطبيقات كتابية وإملائية شائعة"], why:"التركيز على السلامة الإملائية ومنع الأخطاء الشائعة.", assessment:null},
+ {n:4, date:"13 سبتمبر 2026", unit:"صحتي وبيئتي", category:"gram", title:"الوظيفة النحوية: أنواع الكلمة والجملة", topics:["التعرف على أقسام الكلمة (اسم، فعل، حرف)","التمييز بين الجملة الاسمية والجملة الفعلية"], why:"بناء القاعدة الأساسية للتركيب النحوي الصحيح.", assessment:null},
+ {n:5, date:"20 سبتمبر 2026", unit:"صحتي وبيئتي", category:"spell", title:"الظاهرة الإملائية: الهمزة المتطرفة & اليوم الوطني", topics:["الهمزة المتطرفة وكيفية رسمها","اليوم الوطني السعودي (23 و 24 سبتمبر)"], why:"الجمع بين التطبيق الإملائي والمناسبة الوطنية المجيدة.", assessment:{type:"national", label:"اليوم الوطني"}},
+ {n:6, date:"27 سبتمبر 2026", unit:"صحتي وبيئتي", category:"read", title:"نص الاستماع: ناقلة الأمراض", topics:["الاستماع إلى النص بتركيز واهتمام","تحليل النص والإجابة عن أسئلة الفهم الاستماعي"], why:"تنمية مهارات الاستماع والتحليل الشفهي.", assessment:null},
+ {n:7, date:"4 أكتوبر 2026", unit:"صحتي وبيئتي", category:"gram", title:"الوظيفة النحوية: المبتدأ والخبر", topics:["تعريف المبتدأ والخبر وعلامات رفعهما","تطبيقات وإعراب جمل اسمية بسيطة"], why:"إتقان أركان الجملة الاسمية وإعرابها.", assessment:null},
+ {n:8, date:"11 أكتوبر 2026", unit:"صحتي وبيئتي", category:"spell", title:"الظاهرة الإملائية: التاء المربوطة والتاء المفتوحة", topics:["الفرق بين التاء المربوطة والتاء المفتوحة عند النطق والوقف","تدريبات كتابية للتميز بينهما"], why:"تعزيز الدقة في كتابة أواخر الكلمات.", assessment:null},
+ {n:9, date:"18 أكتوبر 2026", unit:"صحتي وبيئتي", category:"read", title:"النص الشعري: لم تألمت الفراشة؟", topics:["قراءة النص الشعري وتذوق أبياته","شرح المفردات والصور الجمالية"], why:"تنمية التذوق الأدبي والجمالي لدى الطلاب.", assessment:null},
+ {n:10, date:"25 أكتوبر 2026", unit:"صحتي وبيئتي", category:"gram", title:"الوظيفة النحوية: الاسم المجرور بحرف الجر", topics:["التعرف على حروف الجر وتأثيرها","علامات جر الاسماء وتطبيقاتها"], why:"فهم أثر حروف الجر والإعراب الصحيح للأسماء.", assessment:null},
+ {n:11, date:"1 نوفمبر 2026", unit:"صحتي وبيئتي", category:"gram", title:"الوظيفة النحوية: أنواع الفعل", topics:["التمييز بين الفعل الماضي والمضارع والأمر","استخدام الأفعال في سياقاتها الصحيحة"], why:"إتقان التمييز بين أزمنة الأفعال وصياغتها.", assessment:null},
+ {n:12, date:"8 نوفمبر 2026", unit:"صحتي وبيئتي", category:"spell", title:"الرسم الكتابي: الحروف المرتكزة على السطر", topics:["قواعد خط النسخ","تدريبات على الحروف المرتكزة على السطر"], why:"تحسين الخط العربي وتطبيق القواعد الرسمية الصحيحة.", assessment:null},
+ {n:13, date:"15 نوفمبر 2026", unit:"صحتي وبيئتي", category:"gram", title:"الوظيفة النحوية: الفاعل", topics:["تعريف الفاعل وموقعه في الجملة الفعلية","علامات رفع الفاعل وتطبيقات إعرابية"], why:"فهم الركن الأساسي الثاني في الجملة الفعلية.", assessment:null},
+ {n:14, date:"22 نوفمبر 2026", unit:"إجازة الخريف", category:"break", title:"إجازة الخريف الرسمية", topics:["إجازة رسمية لمشاريع الخريف والراحة"], why:"فترة استراحة وتجديد لنشاط الطلاب.", assessment:{type:"break", label:"إجازة الخريف"}, isBreak:true},
+ {n:15, date:"29 نوفمبر 2026", unit:"صحتي وبيئتي", category:"gram", title:"الوظيفة النحوية: المفعول به", topics:["تعريف المفعول به وعلامات نصبه","تمارين نحوية على الجملة الفعلية المتعدية"], why:"إكمال عناصر الجملة الفعلية وفهم التعدي واللزوم.", assessment:null},
+ {n:16, date:"6 ديسمبر 2026", unit:"صحتي وبيئتي", category:"spell", title:"كلمات حذفت الألف من وسطها", topics:["التعرف على الكلمات ذات الرسم الخاص (مثل: هذا، ذلك، لكن...)","تدريبات إملائية لتثبيت الرسم الصحيح"], why:"تجنب الأخطاء الإملائية في الكلمات الشائعة.", assessment:null},
+ {n:17, date:"13 ديسمبر 2026", unit:"صحتي وبيئتي", category:"quiz", title:"نموذج اختبار (1) المطر", topics:["تطبيق نموذج اختبار شامل على نص المطر","تقييم المهارات القرائية والإملائية والنحوية"], why:"قياس المخرجات التعليمية والتدريب على نمط الاختبارات.", assessment:{type:"quiz", label:"نموذج اختبار 1"}},
+ {n:18, date:"20 ديسمبر 2026", unit:"صحتي وبيئتي", category:"revision", title:"مراجعة الاختبار النهائي", topics:["مراجعة شاملة لجميع مفردات وحدة (صحتي وبيئتي)","حل تدريبات وإثراءات ختامية"], why:"الترسيخ النهائي واستكمال الجاهزية للاختبارات.", assessment:{type:"revision", label:"مراجعة نهائية"}}
+];
+
+function badgeHtml(a){
+  if(!a) return "";
+  return `<span class="badge ${a.type}">${a.label}</span>`;
+}
+
+function renderTimeline(filter){
+  const el = document.getElementById('timeline');
+  el.innerHTML = weeks.map(w=>{
+    const show = (filter==='all') ? true :
+      (filter==='assessments' ? !!w.assessment : w.category===filter);
+    return `
+    <details class="week-card ${show?'':'hidden'}" data-week="${w.n}">
+      <summary>
+        <div class="week-num mono">الأسبوع ${w.n}</div>
+        <div class="week-meta">
+          <div class="week-date">${w.date}</div>
+          <div class="week-title">${w.title}</div>
+          <div class="week-unit">${w.unit}</div>
+        </div>
+        ${badgeHtml(w.assessment)}
+        <div class="chev">◀</div>
+      </summary>
+      <div class="week-body">
+        <ul>${w.topics.map(t=>`<li>${t}</li>`).join('')}</ul>
+        <p class="why"><b>الهدف التعليمي:</b> ${w.why}</p>
+      </div>
+    </details>`;
+  }).join('');
+}
+
+function renderFilters(){
+  const bar = document.getElementById('filterBar');
+  const options = [
+    {key:'all', label:'جميع الأسابيع'},
+    {key:'gram', label:'الوظائف النحوية'},
+    {key:'spell', label:'الظاهرة الإملائية والخط'},
+    {key:'read', label:'القراءة والنصوص'},
+    {key:'assessments', label:'الإجازات والتقييمات'}
+  ];
+  bar.innerHTML = options.map((o,i)=>`<button class="filter-btn ${i===0?'active':''}" data-key="${o.key}">${o.label}</button>`).join('');
+  bar.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      bar.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTimeline(btn.dataset.key);
+    });
+  });
+}
+
+function assessColor(a){
+  if(!a) return "#E3A94D";
+  if(a.type==='national') return "#4FA69A";
+  if(a.type==='break') return "#8A93A6";
+  if(a.type==='quiz') return "#D9694F";
+  if(a.type==='revision') return "#B23A48";
+  return "#E3A94D";
+}
+
+function buildCurve(){
+  const svg = document.getElementById('curveSvg');
+  const n = weeks.length;
+  const w = 1400, h = 190;
+  const marginX = 40, marginY = 46;
+  const amp = 42;
+  let pathD = "";
+  const pts = [];
+  for(let i=0;i<n;i++){
+    const x = marginX + (i/(n-1)) * (w - marginX*2);
+    const y = marginY + amp * Math.sin((i/(n-1)) * Math.PI * 2.4) + amp*0.4;
+    pts.push({x,y});
+    pathD += (i===0?`M ${x} ${y}`:` L ${x} ${y}`);
+  }
+  let svgContent = `<path d="${pathD}" fill="none" stroke="#2A3B66" stroke-width="2.5"/>`;
+
+  weeks.forEach((wk,i)=>{
+    const {x,y} = pts[i];
+    const isBreak = wk.isBreak;
+    const color = isBreak ? "#4A5578" : assessColor(wk.assessment);
+    const r = (wk.assessment && !isBreak) ? 9 : (isBreak ? 6 : 5);
+    svgContent += `
+      <g class="node" data-week="${wk.n}" transform="translate(${x},${y})">
+        <circle r="${r}" fill="${color}" ${isBreak ? 'stroke="#4A5578" stroke-dasharray="2,2" fill-opacity="0.4"' : ''}/>
+        <text x="0" y="${(y > 95 ? -16 : 24)}" text-anchor="middle">أسبوع ${wk.n}</text>
+      </g>`;
+  });
+
+  svg.innerHTML = svgContent;
+
+  svg.querySelectorAll('.node').forEach(node=>{
+    node.addEventListener('click', ()=>{
+      const weekNum = node.dataset.week;
+      const filterAll = document.querySelector('.filter-btn[data-key="all"]');
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      if(filterAll) filterAll.classList.add('active');
+      renderTimeline('all');
+      const card = document.querySelector(`.week-card[data-week="${weekNum}"]`);
+      if(card){
+        card.open = true;
+        card.scrollIntoView({behavior:'smooth', block:'center'});
+        card.style.boxShadow = "0 0 0 2px #E3A94D";
+        setTimeout(()=>{ card.style.boxShadow = "none"; }, 1400);
+      }
+    });
+  });
+}
+
+renderFilters();
+renderTimeline('all');
+buildCurve();
+</script>
+
+</body>
+</html>
